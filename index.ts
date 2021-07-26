@@ -37,13 +37,14 @@ class DrawingUtil {
         const sc1 : number = ScaleUtil.divideScale(scale, 0, parts)
         const sc2 : number = ScaleUtil.divideScale(scale, 1, parts)
         const r : number = Math.min(w, h) / (sizeFactor * 2)
+        console.log(sc1, sc2, w / 2 - w / 2 - r + (w / 2 + r) * sc1)
         context.save()
-        context.translate(w / 2, h / 2)
+        context.translate(w / 2 - w / 2 - r + (w / 2 + r) * sc1, h / 2)
         for (var j = 0; j < 3; j++) {
-            const y : number = (h / 2) + (w / 2 - h / 2) * (j % 2)
+            const y : number = (h / 2) + r + (w / 2 - h / 2) * (j % 2)
             context.save()
             context.rotate((Math.PI / 2) * j)
-            DrawingUtil.drawCircle(context, 0, y * sc2, r * sc1)
+            DrawingUtil.drawCircle(context, 0, -y * sc2, r)
             context.restore()
         }
         context.restore()
@@ -52,7 +53,7 @@ class DrawingUtil {
     static drawDBNode(context : CanvasRenderingContext2D, i : number, scale : number) {
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / strokeFactor
-        context.strokeStyle = colors[i]
+        context.fillStyle = colors[i]
         DrawingUtil.drawDivideBall(context, scale)
     }
 }
