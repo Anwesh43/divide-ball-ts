@@ -196,3 +196,25 @@ class DivideBall {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    db : DivideBall = new DivideBall()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.db.draw(context)    
+    }
+
+    handleTap(cb : Function) {
+        this.db.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.db.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
