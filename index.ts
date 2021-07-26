@@ -12,6 +12,7 @@ const colors : Array<string> = [
     "#BF360C",
     "#6200EA"
 ]
+const strokeFactor : number = 90 
 
 class ScaleUtil {
 
@@ -21,5 +22,37 @@ class ScaleUtil {
 
     static divideScale(scale : number, i : number, n : number) : number {
         return Math.min(1 / n, ScaleUtil.maxScale(scale, i, n)) * n 
+    }
+}
+
+class DrawingUtil {
+
+    static drawCircle(context : CanvasRenderingContext2D, x : number, y : number, r : number) {
+        context.beginPath()
+        context.arc(x, y, r, 0, 2 * Math.PI)
+        context.fill()
+    }
+
+    static drawDivideBall(context : CanvasRenderingContext2D, scale : number) {
+        const sc1 : number = ScaleUtil.divideScale(scale, 0, parts)
+        const sc2 : number = ScaleUtil.divideScale(scale, 1, parts)
+        const r : number = Math.min(w, h) / (sizeFactor * 2)
+        context.save()
+        context.translate(w / 2, h / 2)
+        for (var j = 0; j < 3; j++) {
+            const y : number = (h / 2) + (w / 2 - h / 2) * (j % 2)
+            context.save()
+            context.rotate((Math.PI / 2) * j)
+            DrawingUtil.drawCircle(context, 0, y * sc2, r * sc1)
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawDBNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor
+        context.strokeStyle = colors[i]
+        DrawingUtil.drawDivideBall(context, scale)
     }
 }
